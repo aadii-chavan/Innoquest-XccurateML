@@ -1,14 +1,18 @@
-# 🧠 Brain Tumor Detection System
+# 🧠 Xccurate-ML: Brain Tumor Detection System
 
 ---
 
-**Team Name:** Team INNOVISIONERS  <br>
-**Team Members:** Aditya Chavan, Rushikesh Ambhore, Atharva Agey, Pranav Dawange  
+**Team Name:** Team INNOVISIONERS  \
+**Team Members:** Aditya Chavan, Rushikesh Ambhore, Atharva Agey, Pranav Dawange  \
 **Project Name:** Xccurate-ML  
-**Project Abstract:**
+
 > Xccurate-ML is an advanced AI-powered diagnostic tool that leverages deep learning to analyze MRI brain scans for the detection and classification of brain tumors. Designed for both healthcare professionals and non-experts, it delivers fast, accurate, and accessible results, supporting early diagnosis and improved patient outcomes.
 
-**Tech Stack:** Python 3.9+, TensorFlow 2.x, Keras, NumPy, Pillow  
+**Tech Stack:**
+- **Backend:** Python 3.9+, Flask, TensorFlow 2.x, Keras, NumPy, Pillow
+- **Frontend:** React (Vite), TypeScript, shadcn/ui, TailwindCSS
+- **Other:** Flask-CORS, REST API
+
 **Dataset Used:** [Brain Tumor MRI Dataset (Kaggle)](https://www.kaggle.com/datasets/sartajbhuvaji/brain-tumor-classification-mri)
 
 ---
@@ -18,6 +22,7 @@
   <img src="https://img.shields.io/badge/python-3.9+-blue.svg" alt="Python 3.9+"/>
   <img src="https://img.shields.io/badge/TensorFlow-2.x-orange.svg" alt="TensorFlow 2.x"/>
   <img src="https://img.shields.io/badge/Keras-2.x-red.svg" alt="Keras"/>
+  <img src="https://img.shields.io/badge/React-18.x-61dafb.svg" alt="React"/>
 </p>
 
 > **AI-powered MRI analysis for fast, accurate, and accessible brain tumor detection.**
@@ -30,7 +35,8 @@
 - [How it Works](#how-it-works)
 - [Project Structure](#project-structure)
 - [Getting Started](#getting-started)
-- [Usage](#usage)
+- [Backend API Usage](#backend-api-usage)
+- [Frontend Workflow](#frontend-workflow)
 - [Model Architecture](#model-architecture)
 - [Dataset Information](#dataset-information)
 - [Model Training Details](#model-training-details)
@@ -63,13 +69,13 @@ Empower rapid, accessible tumor screening for all—reducing diagnosis time, aid
 - 📊 **Output:** Tumor prediction and type in human-readable format
 - 💻 **Cross-platform Ready:** Integrate into mobile/web apps
 - 🔒 **Locally Secure:** No cloud upload—model runs locally for privacy
+- 🌐 **Modern UI:** Fast, responsive, and accessible web interface
 
 ---
 
 ## 🛠️ How it Works
 
-
-1. **Upload MRI Image** → 2. **Image Preprocessing** → 3. **Model Prediction** → 4. **Result Interpretation**
+1. **Upload MRI Image** → 2. **Image Preprocessing** → 3. **Model Prediction (Backend API)** → 4. **Result Interpretation (Frontend UI)**
 
 ---
 
@@ -77,13 +83,19 @@ Empower rapid, accessible tumor screening for all—reducing diagnosis time, aid
 
 ```text
 .
-├── images/                   # Sample MRI images
-│   ├── 01.png
-│   ├── 1.jpg
-│   └── ...
-├── brain-tumor.keras         # Trained deep learning model
-├── predict.py                # Model prediction script
-└── README.md                 # Project documentation
+├── backend/
+│   ├── main.py                # Flask API for model inference
+│   ├── best_model_augmented.keras # Trained deep learning model
+│   ├── requirements.txt       # Backend dependencies
+│   └── Testing/               # Test MRI images (by class)
+├── src/
+│   ├── App.tsx                # React app entry
+│   ├── pages/                 # Main pages (Index, ScanPage, NotFound)
+│   ├── components/            # UI components (Hero, HowItWorks, etc.)
+│   └── ...                    # Styles, assets, hooks, etc.
+├── package.json               # Frontend dependencies
+├── README.md                  # Project documentation
+└── ...
 ```
 
 ---
@@ -92,47 +104,75 @@ Empower rapid, accessible tumor screening for all—reducing diagnosis time, aid
 
 ### Prerequisites
 - Python 3.9+
-- TensorFlow
-- Keras
-- NumPy
-- Pillow
+- Node.js 18+
+- pip, npm/yarn
 
-Install dependencies:
-```bash
-pip install tensorflow numpy pillow
-```
+### Backend Setup
+1. Navigate to `backend/`:
+   ```bash
+   cd backend
+   ```
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Run the Flask server:
+   ```bash
+   python main.py
+   ```
+   The API will be available at `http://localhost:5000`.
 
-### Installation
-1. Clone the repository:
+### Frontend Setup
+1. Navigate to the project root:
    ```bash
-   git clone https://github.com/your-username/brain-tumor-detection.git
+   cd .. # if in backend/
+   npm install
+   npm run dev
    ```
-2. Navigate to the project directory:
-   ```bash
-   cd brain-tumor-detection
-   ```
+2. The React app will be available at `http://localhost:5173` (default Vite port).
 
 ---
 
-## 💻 Usage
+## 🔌 Backend API Usage
 
-Test the model with an MRI image using the `predict.py` script:
+### Endpoints
+- `GET /status` — Check model and server health
+  - **Response:** `{ status: "ok", model_loaded: true, input_shape: [height, width] }`
+- `POST /predict` — Predict tumor type from uploaded image
+  - **Request:** Multipart form-data with key `file` (image file)
+  - **Response:**
+    ```json
+    {
+      "predicted_class": "glioma",
+      "confidence": 0.97,
+      "all_class_probabilities": {
+        "glioma": 0.97,
+        "meningioma": 0.01,
+        "notumor": 0.01,
+        "pituitary": 0.01
+      }
+    }
+    ```
 
-```bash
-python predict.py --model brain-tumor.keras --image images/1111.jpg
-```
+---
 
-Sample output:
-```text
-Prediction: Glioma Tumor
-```
+## 🖥️ Frontend Workflow
+
+- **Landing Page:** Explains the product, features, and workflow.
+- **Scan Page:**
+  - User uploads an MRI/medical image (JPG/PNG).
+  - The app checks backend status (`/status`).
+  - On upload, the image is sent to the backend (`/predict`).
+  - Results (diagnosis, confidence, detailed findings, recommendations) are displayed in a modern, responsive UI.
+  - Medical disclaimer and guidance are provided.
+- **Error Handling:** User-friendly error messages for backend/API issues.
+- **Routing:** `/` (home), `/scan` (analyze), `*` (404 Not Found)
 
 ---
 
 ## 🧠 Model Architecture
 
-### 🧩 Base Model
-- **Architecture:** ResNet50V2 (Pre-trained on ImageNet)
+- **Base Model:** ResNet50V2 (Pre-trained on ImageNet)
 - **Approach:** Transfer Learning
 - **Input Shape:** `150x150x3`
 - **Output Classes:** 4 (Glioma, Meningioma, Pituitary, No Tumor)
@@ -186,8 +226,7 @@ Prediction: Glioma Tumor
 
 ## 🧑‍💻 Contributors
 
-**Team SafeAI**
-
+**Team INNOVISIONERS**
 - Aditya Chavan — Machine Learning Engineer
 - Rushikesh Ambhore — Backend Developer
 - Atharva Agey — UI/UX & Frontend Designer
@@ -213,8 +252,8 @@ Special thanks to:
 ## 📬 Contact
 
 For questions, suggestions, or collaborations:
-- **Email:** [contact@aadiichavan.com](mailto:aditya.chavan24@vit.edu)
-- **LinkedIn:** [Aditya Chavan](www.linkedin.com/in/aadii-chavan)
+- **Email:** [aditya.chavan24@vit.edu](mailto:aditya.chavan24@vit.edu)
+- **LinkedIn:** [Aditya Chavan](https://www.linkedin.com/in/aadii-chavan)
 
 ---
 
