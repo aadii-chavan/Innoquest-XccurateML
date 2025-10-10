@@ -60,7 +60,7 @@ const ScanPage = () => {
     try {
       const formData = new FormData();
       formData.append("file", selectedFile);
-      const res = await fetch(`${BACKEND_URL}/predict`, {
+      const res = await fetch(`${BACKEND_URL}/classify`, {
         method: "POST",
         body: formData,
       });

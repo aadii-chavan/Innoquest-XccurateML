@@ -7,22 +7,26 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Python cache and intermediate files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# Backend model artifacts (do not commit trained models)
+backend/*.h5
+backend/*.keras
+
+# Bun, Node, and Vite build artifacts
+bun.lockb
+node_modules/
+dist/
+dist-ssr/
 
 # Ignore backend Testing images and data
 backend/Testing/
-best_model_augmented.keras
+
+# If you ever accidentally committed a model, remove it from git with:
+# git rm --cached backend/model_per_class.h5
+# git rm --cached backend/model_x81_dcs65.h5
+# git rm --cached backend/best_model_augmented.keras
